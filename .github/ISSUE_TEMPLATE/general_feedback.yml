@@ -1,0 +1,80 @@
+name: "Ogólna opinia"
+description: "Przekaż ogólną opinię o TekstLab"
+title: "[Opinia] "
+labels: ["feedback"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## ⚠️ Ważna informacja o prywatności
+        Zgłoszenia na GitHub Issues są **publiczne** i mogą ujawniać Twoją nazwę użytkownika GitHub.
+        **Nie wklejaj** prywatnych dokumentów, danych osobowych ani treści wrażliwych.
+        Jeśli wolisz anonimowość, użyj alternatywnego formularza (kontakt przez właściciela projektu).
+
+  - type: textarea
+    id: useful
+    attributes:
+      label: Co było przydatne?
+      description: "Które funkcje były najbardziej przydatne? Co Ci się podobało?"
+      placeholder: "Najbardziej przydatne było..."
+    validations:
+      required: false
+
+  - type: textarea
+    id: unclear
+    attributes:
+      label: Co było niezrozumiałe?
+      description: "Co było trudne do zrozumienia lub użycia?"
+      placeholder: "Niejasne było..."
+    validations:
+      required: false
+
+  - type: textarea
+    id: missing
+    attributes:
+      label: Czego zabrakło?
+      description: "Jakich funkcji brakuje? Co chciałbyś zobaczyć?"
+      placeholder: "Brakowało..."
+    validations:
+      required: false
+
+  - type: dropdown
+    id: return
+    attributes:
+      label: Czy użyłbyś TekstLab ponownie?
+      description: "Czy wrócisz do narzędzia w przyszłości?"
+      options:
+        - "Tak, na pewno"
+        - "Może"
+        - "Nie"
+    validations:
+      required: false
+
+  - type: dropdown
+    id: premium
+    attributes:
+      label: Czy zapłaciłbyś za dodatkowe funkcje?
+      description: "Czy widzisz wartość w płatnej wersji? (To tylko deklaracja, nie zobowiązanie)"
+      options:
+        - "Tak"
+        - "Nie"
+        - "Może"
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Dodatkowe uwagi (opcjonalnie)
+      description: "Czy masz inne uwagi lub sugestie?"
+      placeholder: "Dodatkowo..."
+    validations:
+      required: false
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        **Przypomnienie:** Zgłoszenia są publiczne. Nie wklejaj prywatnych dokumentów, danych osobowych ani treści wrażliwych.
+        Korzystanie z GitHub Issues podlega [Zasadom GitHub](https://docs.github.com/en/site-policy/github-terms/github-terms-of-service).
+        **Uwaga:** Pytanie o gotowość do zapłaty mierzy wyłącznie deklarację, nie rzeczywistą gotowość do zakupu.
