@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TekstLab — Analiza tekstu po polsku | Licznik słów, czytelność, SEO</title>
+<meta name="description" content="Darmowe, prywatne narzędzie do analizy tekstu po polsku. Licznik słów, znaków, zdań, czytelność, gęstość słów kluczowych, czas czytania. Wszystko przetwarzane lokalnie — Twoje dane nigdy nie opuszczają przeglądarki.">
+<meta name="keywords" content="licznik słów, analiza tekstu, czytelność, SEO, słowa kluczowe, statystyki tekstu, polski, darmowe narzędzie">
+<meta name="author" content="NEXUS OPPORTUNITY">
+<meta property="og:title" content="TekstLab — Analiza tekstu po polsku">
+<meta property="og:description" content="Darmowe, prywatne narzędzie do analizy tekstu. Licznik słów, czytelność, SEO, statystyki. Wszystko lokalnie.">
+<meta property="og:type" content="website">
+<link rel="canonical" href="https://tekstlab.pl">
+<style>
+  :root {
+    --bg: #0f172a;
+    --bg2: #1e293b;
+    --bg3: #334155;
+    --border: #475569;
+    --text: #f1f5f9;
+    --text2: #94a3b8;
+    --accent: #3b82f6;
+    --accent2: #8b5cf6;
+    --green: #22c55e;
+    --yellow: #eab308;
+    --red: #ef4444;
+    --orange: #f97316;
+  }
+  .light {
+    --bg: #f8fafc;
+    --bg2: #ffffff;
+    --bg3: #f1f5f9;
+    --border: #cbd5e1;
+    --text: #1e293b;
+    --text2: #64748b;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    transition: background 0.3s, color 0.3s;
+  }
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+  
+  /* Header */
+  .header {
+    background: linear-gradient(135deg, var(--bg2), var(--bg3));
+    border-bottom: 1px solid var(--border);
+    padding: 16px 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(10px);
+  }
+  .header-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .logo {
+    font-size: 24px;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .logo span { color: var(--text2); font-weight: 400; font-size: 14px; margin-left: 8px; }
+  .theme-toggle {
+    padding: 8px 16px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg3);
+    color: var(--text);
+    cursor: pointer;
+    font-size: 14px;
+  }
+  
+  /* Hero */
+  .hero {
+    text-align: center;
+    padding: 60px 0 40px;
+  }
+  .hero h1 {
+    font-size: 42px;
+    margin-bottom: 16px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero p { font-size: 18px; color: var(--text2); max-width: 700px; margin: 0 auto 24px; }
+  .privacy-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 20px;
+    background: rgba(34,197,94,0.15);
+    color: var(--green);
+    font-size: 14px;
+    font-weight: 600;
+  }
+  
+  /* Stats grid */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .stat-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    text-align: center;
+  }
+  .stat-card .value {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--accent);
+  }
+  .stat-card .label {
+    font-size: 12px;
+    color: var(--text2);
+    margin-top: 4px;
+  }
+  .stat-card.highlight .value { color: var(--green); }
+  
+  /* Input area */
+  .input-section {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  .input-section textarea {
+    width: 100%;
+    min-height: 200px;
+    padding: 16px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 14px;
+    font-family: inherit;
+    resize: vertical;
+    outline: none;
+  }
+  .input-section textarea:focus { border-color: var(--accent); }
+  .input-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+  }
+  .btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+  .btn-primary { background: var(--accent); color: white; }
+  .btn-primary:hover { background: #2563eb; }
+  .btn-secondary { background: var(--bg3); color: var(--text); border: 1px solid var(--border); }
+  .btn-secondary:hover { background: var(--border); }
+  .btn-success { background: var(--green); color: white; }
+  
+  /* Results */
+  .results-section {
+    display: none;
+    margin-bottom: 20px;
+  }
+  .results-section.active { display: block; }
+  
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  @media (max-width: 768px) { .two-col { grid-template-columns: 1fr; } }
+  
+  .panel {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+  }
+  .panel h3 {
+    font-size: 16px;
+    margin-bottom: 12px;
+    color: var(--accent);
+  }
+  
+  .kw-list {
+    max-height: 200px;
+    overflow-y: auto;
+  }
+  .kw-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+  .kw-item:last-child { border-bottom: none; }
+  .kw-bar {
+    height: 4px;
+    background: var(--bg3);
+    border-radius: 2px;
+    margin-top: 2px;
+  }
+  .kw-bar-fill { height: 100%; background: var(--accent); border-radius: 2px; }
+  
+  .readability {
+    text-align: center;
+    padding: 20px;
+  }
+  .readability-score {
+    font-size: 48px;
+    font-weight: 700;
+    color: var(--accent);
+  }
+  .readability-label {
+    font-size: 14px;
+    color: var(--text2);
+    margin-top: 4px;
+  }
+  .readability-bar {
+    width: 100%;
+    height: 8px;
+    background: var(--bg3);
+    border-radius: 4px;
+    margin-top: 12px;
+    overflow: hidden;
+  }
+  .readability-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.5s;
+  }
+  
+  /* Features section */
+  .features {
+    padding: 40px 0;
+  }
+  .features h2 { text-align: center; font-size: 28px; margin-bottom: 30px; }
+  .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+  }
+  .feature-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+  }
+  .feature-card h4 { font-size: 16px; margin-bottom: 8px; color: var(--accent); }
+  .feature-card p { font-size: 13px; color: var(--text2); }
+  
+  /* FAQ */
+  .faq { padding: 40px 0; }
+  .faq h2 { text-align: center; font-size: 28px; margin-bottom: 30px; }
+  .faq-item {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 10px;
+    overflow: hidden;
+  }
+  .faq-q {
+    padding: 16px 20px;
+    cursor: pointer;
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .faq-q:hover { background: var(--bg3); }
+  .faq-a {
+    padding: 0 20px 16px;
+    color: var(--text2);
+    font-size: 14px;
+    display: none;
+  }
+  .faq-a.active { display: block; }
+  
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 30px 0;
+    color: var(--text2);
+    font-size: 12px;
+    border-top: 1px solid var(--border);
+    margin-top: 40px;
+  }
+  .footer a { color: var(--accent); text-decoration: none; }
+  
+  /* Premium badge */
+  .premium-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: white;
+    margin-left: 8px;
+  }
+  
+  /* Export buttons */
+  .export-bar {
+    display: flex;
+    gap: 10px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+  }
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="container header-inner">
+    <div class="logo">TekstLab <span>Analiza tekstu po polsku</span></div>
+    <button class="theme-toggle" onclick="toggleTheme()">🌙 Ciemny</button>
+  </div>
+</div>
+
+<div class="container">
+  <!-- Hero -->
+  <div class="hero">
+    <h1>Analizuj tekst w sekundy</h1>
+    <p>Darmowe, prywatne narzędzie do analizy tekstu po polsku. Licznik słów, znaków, zdań, czytelność, gęstość słów kluczowych, czas czytania. Wszystko przetwarzane lokalnie — Twoje dane nigdy nie opuszczają przeglądarki.</p>
+    <div class="privacy-badge">🔒 100% prywatne — przetwarzanie lokalne</div>
+  </div>
+  
+  <!-- Input -->
+  <div class="input-section">
+    <textarea id="textInput" placeholder="Wklej lub wpisz tekst tutaj... (minimum 10 znaków)" oninput="analyze()"></textarea>
+    <div class="input-actions">
+      <button class="btn btn-primary" onclick="analyze()">Analizuj</button>
+      <button class="btn btn-secondary" onclick="clearText()">Wyczyść</button>
+      <button class="btn btn-secondary" onclick="pasteText()">Wklej ze schowka</button>
+      <button class="btn btn-secondary" onclick="loadSample()">Przykładowy tekst</button>
+      <label class="btn btn-secondary" style="cursor:pointer;">
+        📄 Wczytaj plik (.txt)
+        <input type="file" accept=".txt,.md,.csv" style="display:none;" onchange="loadFile(this)">
+      </label>
+    </div>
+  </div>
+  
+  <!-- Stats -->
+  <div class="stats-grid" id="statsGrid"></div>
+  
+  <!-- Results -->
+  <div class="results-section" id="results">
+    <div class="two-col">
+      <!-- Readability -->
+      <div class="panel">
+        <h3>📊 Czytelność</h3>
+        <div class="readability">
+          <div class="readability-score" id="readScore">—</div>
+          <div class="readability-label" id="readLabel">Wklej tekst, aby zobaczyć wynik</div>
+          <div class="readability-bar"><div class="readability-fill" id="readFill" style="width:0%"></div></div>
+        </div>
+        <div id="readDetails" style="margin-top:12px; font-size:13px; color:var(--text2);"></div>
+      </div>
+      
+      <!-- Keywords -->
+      <div class="panel">
+        <h3>🔑 Słowa kluczowe (Top 15)</h3>
+        <div class="kw-list" id="kwList">
+          <p style="color:var(--text2); font-size:13px;">Wklej tekst, aby zobaczyć słowa kluczowe</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="two-col">
+      <!-- Text stats -->
+      <div class="panel">
+        <h3>📈 Statystyki tekstu</h3>
+        <div id="textStats"></div>
+      </div>
+      
+      <!-- Export -->
+      <div class="panel">
+        <h3>💾 Eksport wyników</h3>
+        <p style="font-size:13px; color:var(--text2); margin-bottom:12px;">Pobierz wyniki analizy w wybranym formacie.</p>
+        <div class="export-bar">
+          <button class="btn btn-success" onclick="exportJSON()">Eksportuj JSON</button>
+          <button class="btn btn-success" onclick="exportCSV()">Eksportuj CSV</button>
+          <button class="btn btn-secondary" onclick="copyResults()">Kopiuj wyniki</button>
+        </div>
+        <div id="exportStatus" style="margin-top:8px; font-size:12px; color:var(--text2);"></div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Features -->
+  <div class="features">
+    <h2>Dlaczego TekstLab?</h2>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <h4>🔒 100% prywatne</h4>
+        <p>Wszystko przetwarzane w przeglądarce. Twoje dane nigdy nie opuszczają komputera. Bez rejestracji, bez cookies, bez śledzenia.</p>
+      </div>
+      <div class="feature-card">
+        <h4>⚡ Błyskawiczne</h4>
+        <p>Wyniki w czasie rzeczywistym. Bez czekania, bez kolejek, bez limitów. Analizuj teksty dowolnej długości.</p>
+      </div>
+      <div class="feature-card">
+        <h4>🇵🇱 Po polsku</h4>
+        <p>Analiza czytelności i statystyki dostosowane do języka polskiego. Znaki diakrytyczne, interpunkcja, struktura zdań.</p>
+      </div>
+      <div class="feature-card">
+        <h4>📊 Szczegółowe statystyki</h4>
+        <p>Licznik słów, znaków, zdań, akapitów. Czas czytania. Gęstość słów kluczowych. Czytelność. I wiele więcej.</p>
+      </div>
+      <div class="feature-card">
+        <h4>💰 Darmowe</h4>
+        <p>Wszystkie podstawowe funkcje dostępne za darmo. Bez limitów, bez reklam, bez rejestracji.</p>
+      </div>
+      <div class="feature-card">
+        <h4>📱 Responsywne</h4>
+        <p>Działa na komputerze, tablecie i telefonie. Interfejs dostosowany do każdego ekranu.</p>
+      </div>
+    </div>
+  </div>
+  
+  <!-- FAQ -->
+  <div class="faq">
+    <h2>Najczęstsze pytania</h2>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Czy TekstLab jest darmowy? <span>+</span></div>
+      <div class="faq-a">Tak, wszystkie podstawowe funkcje są dostępne za darmo. Bez limitów, bez reklam, bez rejestracji.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Czy moje dane są bezpieczne? <span>+</span></div>
+      <div class="faq-a">Tak. Wszystko przetwarzane jest w przeglądarce. Tekst nigdy nie jest wysyłany na serwer. Nie używamy cookies ani śledzenia.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Jak obliczana jest czytelność? <span>+</span></div>
+      <div class="faq-a">Używamy zmodyfikowanej formuły LIX (czytelność dla języków germańskich/słowiańskich) dostosowanej do języka polskiego. Uwzględniamy długość zdań i złożoność słów.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Czy mogę używać TekstLab do celów komercyjnych? <span>+</span></div>
+      <div class="faq-a">Tak, narzędzie jest darmowe do użytku komercyjnego i niekomercyjnego.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Jakie są plany rozwoju? <span>+</span></div>
+      <div class="faq-a">Planujemy dodać: AI analizę tekstu, eksport do PDF/DOCX, analizę bulk (wiele tekstów), API, oraz wersję premium z zaawansowanymi funkcjami.</div>
+    </div>
+  </div>
+  
+  <!-- Monetization section -->
+  <div class="features" style="padding-top:20px;">
+    <h2>Premium <span class="premium-badge">WKRÓTCE</span></h2>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <h4>🤖 AI Analiza</h4>
+        <p>Analiza sentymentu, wykrywanie tematów, sugestie poprawek, sprawdzanie gramatyki z AI.</p>
+      </div>
+      <div class="feature-card">
+        <h4>📄 Eksport PDF/DOCX</h4>
+        <p>Eksportuj wyniki analizy do PDF lub DOCX z profesjonalnym formatowaniem.</p>
+      </div>
+      <div class="feature-card">
+        <h4>📦 Bulk Processing</h4>
+        <p>Analizuj wiele tekstów jednocześnie. Idealne dla agencji i wydawców.</p>
+      </div>
+      <div class="feature-card">
+        <h4>🔌 API Access</h4>
+        <p>Integruj analizę tekstu z własnymi aplikacjami i workflow.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <div class="container">
+    <p>TekstLab — Darmowe narzędzie do analizy tekstu po polsku</p>
+    <p style="margin-top:8px;">🔒 Wszystko przetwarzane lokalnie | Bez rejestracji | Bez reklam | Bez cookies</p>
+    <p style="margin-top:8px;">© 2026 NEXUS OPPORTUNITY | <a href="#">Kontakt</a> | <a href="#">Polityka prywatności</a></p>
+  </div>
+</div>
+
+<script>
+// --- Theme ---
+function toggleTheme() {
+  document.body.classList.toggle('light');
+  const btn = document.querySelector('.theme-toggle');
+  btn.textContent = document.body.classList.contains('light') ? '☀️ Jasny' : '🌙 Ciemny';
+  localStorage.setItem('theme', document.body.classList.contains('light') ? 'light' : 'dark');
+}
+if (localStorage.getItem('theme') === 'light') {
+  document.body.classList.add('light');
+  document.querySelector('.theme-toggle').textContent = '☀️ Jasny';
+}
+
+// --- Analysis ---
+let currentResults = null;
+
+function analyze() {
+  const text = document.getElementById('textInput').value;
+  if (text.trim().length < 10) {
+    document.getElementById('statsGrid').innerHTML = '';
+    document.getElementById('results').classList.remove('active');
+    return;
+  }
+  
+  const results = analyzeText(text);
+  currentResults = results;
+  renderStats(results);
+  renderResults(results);
+  document.getElementById('results').classList.add('active');
+}
+
+function analyzeText(text) {
+  // Basic counts
+  const chars = text.length;
+  const charsNoSpaces = text.replace(/\s/g, '').length;
+  const words = text.trim().split(/\s+/).filter(w => w.length > 0);
+  const wordCount = words.length;
+  const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0);
+  const sentenceCount = sentences.length;
+  const paragraphs = text.split(/\n\n+/).filter(p => p.trim().length > 0);
+  const paragraphCount = paragraphs.length || 1;
+  
+  // Unique words
+  const uniqueWords = new Set(words.map(w => w.toLowerCase().replace(/[^\\wąćęłńóśźż]/g, ''))).size;
+  const uniquePercent = wordCount > 0 ? (uniqueWords / wordCount * 100).toFixed(1) : 0;
+  
+  // Sentence lengths
+  const sentenceLengths = sentences.map(s => s.trim().split(/\\s+/).filter(w => w.length > 0).length);
+  const longSentences = sentenceLengths.filter(l => l > 25).length;
+  const avgSentenceLen = sentenceCount > 0 ? (wordCount / sentenceCount).toFixed(1) : 0;
+  
+  // Average word length
+  const avgWordLen = wordCount > 0 ? (charsNoSpaces / wordCount).toFixed(1) : 0;
+  
+  // Longest word
+  const longestWord = words.reduce((a, b) => a.length > b.length ? a : b, '');
+  
+  // Reading time (200 words/min for Polish)
+  const readingTime = Math.ceil(wordCount / 200);
+  
+  // Token estimation (approximate: 1 token ≈ 0.75 words for Polish)
+  const estimatedTokens = Math.ceil(wordCount / 0.75);
+  
+  // Keyword density
+  const wordFreq = {};
+  const stopWords = new Set(['i', 'w', 'z', 'na', 'do', 'to', 'jest', 'się', 'nie', 'o', 'a', 'że', 'żeby', 'jak', 'co', 'za', 'od', 'po', 'przez', 'oraz', 'lub', 'albo', 'ale', 'lecz', 'jednak', 'więc', 'więc', 'bo', 'gdy', 'kiedy', 'gdzie', 'kto', 'co', 'który', 'która', 'które', 'ten', 'ta', 'to', 'te', 'tych', 'tym', 'tego', 'tej', 'tym', 'jego', 'jej', 'ich', 'mu', 'mi', 'go', 'ją', 'je', 'mnie', 'mną', 'tobą', 'nim', 'nią', 'nimi', 'sobą', 'my', 'wy', 'oni', 'one', 'ja', 'ty', 'on', 'ona', 'ono']);
+  words.forEach(w => {
+    const clean = w.toLowerCase().replace(/[^\wąćęłńóśźż]/g, '');
+    if (clean.length > 2 && !stopWords.has(clean)) {
+      wordFreq[clean] = (wordFreq[clean] || 0) + 1;
+    }
+  });
+  const topKeywords = Object.entries(wordFreq)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 15);
+  
+  // Readability (LIX adapted for Polish)
+  // LIX = (words/sentences) + (longWords*100/words)
+  // longWords = words with >6 characters
+  const longWords = words.filter(w => w.length > 6).length;
+  const lix = sentenceCount > 0 ? (wordCount / sentenceCount) + (longWords * 100 / wordCount) : 0;
+  let readabilityLabel = '';
+  let readabilityColor = '';
+  if (lix < 30) { readabilityLabel = 'Bardzo łatwy'; readabilityColor = '#22c55e'; }
+  else if (lix < 40) { readabilityLabel = 'Łatwy'; readabilityColor = '#84cc16'; }
+  else if (lix < 50) { readabilityLabel = 'Średni'; readabilityColor = '#eab308'; }
+  else if (lix < 60) { readabilityLabel = 'Trudny'; readabilityColor = '#f97316'; }
+  else { readabilityLabel = 'Bardzo trudny'; readabilityColor = '#ef4444'; }
+  
+  return {
+    chars, charsNoSpaces, wordCount, sentenceCount, paragraphCount,
+    avgWordLen, longestWord, readingTime, topKeywords, lix, readabilityLabel, readabilityColor,
+    longWords, wordFreq, uniqueWords, uniquePercent, longSentences, avgSentenceLen, estimatedTokens
+  };
+}
+
+function renderStats(r) {
+  const grid = document.getElementById('statsGrid');
+  grid.innerHTML = `
+    <div class="stat-card"><div class="value">${r.wordCount}</div><div class="label">Słów</div></div>
+    <div class="stat-card"><div class="value">${r.chars}</div><div class="label">Znaków (ze spacjami)</div></div>
+    <div class="stat-card"><div class="value">${r.charsNoSpaces}</div><div class="label">Znaków (bez spacji)</div></div>
+    <div class="stat-card"><div class="value">${r.sentenceCount}</div><div class="label">Zdań</div></div>
+    <div class="stat-card"><div class="value">${r.paragraphCount}</div><div class="label">Akapitów</div></div>
+    <div class="stat-card highlight"><div class="value">${r.readingTime} min</div><div class="label">Czas czytania</div></div>
+    <div class="stat-card"><div class="value">${r.uniqueWords}</div><div class="label">Unikalnych słów (${r.uniquePercent}%)</div></div>
+    <div class="stat-card"><div class="value">${r.estimatedTokens}</div><div class="label">Szac. tokenów AI</div></div>
+  `;
+}
+
+function renderResults(r) {
+  // Readability
+  document.getElementById('readScore').textContent = Math.round(r.lix);
+  document.getElementById('readLabel').textContent = r.readabilityLabel;
+  const fill = document.getElementById('readFill');
+  fill.style.width = Math.min(100, r.lix) + '%';
+  fill.style.background = r.readabilityColor;
+  document.getElementById('readDetails').innerHTML = `
+    Wskaźnik LIX: ${r.lix.toFixed(1)} | Zdań: ${r.sentenceCount} | Słów: ${r.wordCount} | Długich słów: ${r.longWords}<br>
+    <small>Im niższy wynik, tym tekst łatwiejszy do czytania. 0-30: bardzo łatwy, 30-40: łatwy, 40-50: średni, 50-60: trudny, 60+: bardzo trudny.</small>
+  `;
+  
+  // Keywords
+  const kwList = document.getElementById('kwList');
+  if (r.topKeywords.length === 0) {
+    kwList.innerHTML = '<p style="color:var(--text2); font-size:13px;">Brak słów kluczowych (za mało tekstu)</p>';
+  } else {
+    const maxFreq = r.topKeywords[0][1];
+    kwList.innerHTML = r.topKeywords.map(([word, freq]) => {
+      const pct = (freq / maxFreq * 100).toFixed(0);
+      const density = (freq / r.wordCount * 100).toFixed(1);
+      return `<div class="kw-item">
+        <span>${word} <small style="color:var(--text2)">(${density}%)</small></span>
+        <span style="color:var(--accent); font-weight:600;">${freq}</span>
+      </div>
+      <div class="kw-bar"><div class="kw-bar-fill" style="width:${pct}%"></div></div>`;
+    }).join('');
+  }
+  
+  // Text stats
+  // Platform limits
+  const platforms = [
+    { name: 'Twitter/X', limit: 280 },
+    { name: 'Instagram bio', limit: 150 },
+    { name: 'LinkedIn post', limit: 3000 },
+    { name: 'SMS', limit: 160 },
+    { name: 'Meta description', limit: 160 },
+    { name: 'H1 (tytuł)', limit: 60 },
+  ];
+  const platformHtml = platforms.map(p => {
+    const remaining = p.limit - r.chars;
+    const pct = Math.min(100, (r.chars / p.limit * 100)).toFixed(0);
+    const color = remaining < 0 ? 'var(--red)' : remaining < p.limit * 0.1 ? 'var(--yellow)' : 'var(--green)';
+    return `<div style="padding:4px 0; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; font-size:12px;">
+      <span>${p.name} (${p.limit} znaków)</span>
+      <span style="color:${color}; font-weight:600;">${remaining >= 0 ? remaining + ' pozostało' : Math.abs(remaining) + ' za dużo'} (${pct}%)</span>
+    </div>`;
+  }).join('');
+  
+  document.getElementById('textStats').innerHTML = `
+    <div style="font-size:13px;">
+      <div style="padding:6px 0; border-bottom:1px solid var(--border);"><strong>Najdłuższe słowo:</strong> ${r.longestWord} (${r.longestWord.length} znaków)</div>
+      <div style="padding:6px 0; border-bottom:1px solid var(--border);"><strong>Średnia długość słowa:</strong> ${r.avgWordLen} znaków</div>
+      <div style="padding:6px 0; border-bottom:1px solid var(--border);"><strong>Średnia długość zdania:</strong> ${r.avgSentenceLen} słów</div>
+      <div style="padding:6px 0; border-bottom:1px solid var(--border);"><strong>Długich zdań (>25 słów):</strong> ${r.longSentences}</div>
+      <div style="padding:6px 0; border-bottom:1px solid var(--border);"><strong>Długich słów (>6 znaków):</strong> ${r.longWords} (${r.wordCount > 0 ? (r.longWords / r.wordCount * 100).toFixed(1) : 0}%)</div>
+      <div style="padding:6px 0; border-bottom:1px solid var(--border);"><strong>Unikalnych słów:</strong> ${r.uniqueWords} (${r.uniquePercent}%)</div>
+      <div style="padding:6px 0; border-bottom:1px solid var(--border);"><strong>Szac. tokenów AI:</strong> ${r.estimatedTokens} (GPT-4/Claude)</div>
+      <div style="padding:8px 0 4px; font-weight:600; font-size:12px; color:var(--accent);">📱 Limity platform</div>
+      ${platformHtml}
+    </div>
+  `;
+}
+
+function clearText() {
+  document.getElementById('textInput').value = '';
+  analyze();
+}
+
+async function pasteText() {
+  try {
+    const text = await navigator.clipboard.readText();
+    document.getElementById('textInput').value = text;
+    analyze();
+  } catch(e) {
+    alert('Nie można odczytać schowka. Wklej tekst ręcznie (Ctrl+V).');
+  }
+}
+
+function loadFile(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    document.getElementById('textInput').value = e.target.result;
+    analyze();
+  };
+  reader.readAsText(file);
+  input.value = '';
+}
+
+function loadSample() {
+  const sample = `Analiza tekstu to ważny element pracy nad treścią. Każdy tekst powinien być zrozumiały dla czytelnika. Długość zdań, złożoność słów i struktura akapitów wpływają na to, jak łatwo czytelnik zrozumie przekaz.
+
+Dobre teksty mają krótkie zdania, proste słowa i jasną strukturę. Zbyt długie zdania i skomplikowane słowa utrudniają czytanie. Warto dbać o czytelność, bo czytelnik szybko się zniechęca i odchodzi.
+
+Analiza tekstu pomaga zidentyfikować problemy. Licznik słów pokazuje długość. Czytelność wskazuje trudność. Gęstość słów kluczowych pomaga w SEO. Wszystkie te narzędzia są dostępne za darmo w TekstLab.
+
+Pamiętaj: dobry tekst to taki, który rozwiązuje problem czytelnika. Nie pisz dla siebie, pisz dla odbiorcy. Używaj prostych słów. Dzieli tekst na akapity. Dodawaj nagłówki. I zawsze sprawdzaj czytelność przed publikacją.`;
+  document.getElementById('textInput').value = sample;
+  analyze();
+}
+
+function exportJSON() {
+  if (!currentResults) return;
+  const data = { ...currentResults, text: document.getElementById('textInput').value };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  download(blob, 'tekstlab-analiza.json');
+  showExportStatus('Pobrano plik JSON');
+}
+
+function exportCSV() {
+  if (!currentResults) return;
+  const r = currentResults;
+  const rows = [
+    ['Metryka', 'Wartość'],
+    ['Słów', r.wordCount],
+    ['Znaków (ze spacjami)', r.chars],
+    ['Znaków (bez spacji)', r.charsNoSpaces],
+    ['Zdań', r.sentenceCount],
+    ['Akapitów', r.paragraphCount],
+    ['Czas czytania (min)', r.readingTime],
+    ['Śr. długość słowa', r.avgWordLen],
+    ['Długich słów (>6)', r.longWords],
+    ['Czytelność (LIX)', r.lix.toFixed(1)],
+    ['Etykieta czytelności', r.readabilityLabel],
+  ];
+  const csv = rows.map(row => row.join(';')).join('\n');
+  const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8' });
+  download(blob, 'tekstlab-analiza.csv');
+  showExportStatus('Pobrano plik CSV');
+}
+
+function copyResults() {
+  if (!currentResults) return;
+  const r = currentResults;
+  const text = `TekstLab — Wyniki analizy
+Słów: ${r.wordCount}
+Znaków (ze spacjami): ${r.chars}
+Znaków (bez spacji): ${r.charsNoSpaces}
+Zdań: ${r.sentenceCount}
+Akapitów: ${r.paragraphCount}
+Czas czytania: ${r.readingTime} min
+Czytelność (LIX): ${r.lix.toFixed(1)} — ${r.readabilityLabel}
+Śr. długość słowa: ${r.avgWordLen}
+Długich słów: ${r.longWords}
+Top słowa kluczowe: ${r.topKeywords.map(([w,f]) => w + '(' + f + ')').join(', ')}`;
+  navigator.clipboard.writeText(text).then(() => showExportStatus('Skopiowano do schowka'));
+}
+
+function download(blob, filename) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function showExportStatus(msg) {
+  document.getElementById('exportStatus').textContent = msg;
+  setTimeout(() => document.getElementById('exportStatus').textContent = '', 3000);
+}
+
+function toggleFaq(el) {
+  const answer = el.nextElementSibling;
+  const span = el.querySelector('span');
+  answer.classList.toggle('active');
+  span.textContent = answer.classList.contains('active') ? '−' : '+';
+}
+
+// Auto-analyze on load if there's text
+window.addEventListener('DOMContentLoaded', () => {
+  const params = new URLSearchParams(window.location.search);
+  const text = params.get('text');
+  if (text) {
+    document.getElementById('textInput').value = decodeURIComponent(text);
+    analyze();
+  }
+});
+</script>
+</body>
+</html>
