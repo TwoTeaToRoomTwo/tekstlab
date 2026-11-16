@@ -1,0 +1,19 @@
+blank_issues_enabled: false
+contact_links:
+  - name: "TekstLab — Aplikacja"
+    url: "https://TwoTeaToRoomTwo.github.io/tekstlab/"
+    about: "Otwórz TekstLab w przeglądarce"
+  - name: "TekstLab — Instrukcja testowania"
+    url: "https://github.com/TwoTeaToRoomTwo/tekstlab/blob/main/README.md"
+    about: "Przeczytaj instrukcję użytkowania"
+  - name: "Polityka prywatności"
+    url: "https://github.com/TwoTeaToRoomTwo/tekstlab/blob/main/PRIVACY-POLICY.md"
+    about: "Przeczytaj politykę prywatności"
+  - name: "Raport z testów"
+    url: "https://github.com/TwoTeaToRoomTwo/tekstlab/blob/main/STAGE8-REPORT.md"
+    about: "Sprawdź wyniki testów"
+
+# Komunikat o publicznej widoczności
+# Zgłoszenia na GitHub Issues są publiczne i mogą ujawniać nazwę użytkownika.
+# Nie publikuj danych prywatnych, treści dokumentów ani informacji wrażliwych.
+# Korzystanie z GitHub Issues podlega Zasadom GitHub.
