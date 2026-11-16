@@ -1,0 +1,46 @@
+name: "Propozycja funkcji"
+description: "Zaproponuj nową funkcję lub ulepszenie TekstLab"
+title: "[Funkcja] "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## ⚠️ Ważna informacja o prywatności
+        Zgłoszenia na GitHub Issues są **publiczne** i mogą ujawniać Twoją nazwę użytkownika GitHub.
+        **Nie wklejaj** prywatnych dokumentów, danych osobowych ani treści wrażliwych.
+        Jeśli wolisz anonimowość, użyj alternatywnego formularza (kontakt przez właściciela projektu).
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Jaki problem rozwiązuje ta funkcja?
+      description: "Opisz problem, który chcesz rozwiązać. Dlaczego obecne funkcje nie wystarczają?"
+      placeholder: "Mam problem z..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Jak wyobrażasz sobie rozwiązanie?
+      description: "Opisz, jak funkcja powinna działać."
+      placeholder: "Chciałbym, aby..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: value
+    attributes:
+      label: Dlaczego ta funkcja byłaby przydatna?
+      description: "Jak często byś z niej korzystał? Dla kogo byłaby przydatna?"
+      placeholder: "Ta funkcja byłaby przydatna, ponieważ..."
+    validations:
+      required: false
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        **Przypomnienie:** Zgłoszenia są publiczne. Nie wklejaj prywatnych dokumentów, danych osobowych ani treści wrażliwych.
+        Korzystanie z GitHub Issues podlega [Zasadom GitHub](https://docs.github.com/en/site-policy/github-terms/github-terms-of-service).
